@@ -52,7 +52,7 @@ parseInput w = do
 
     parseEvent (EventCharacter c)
       | c == 'q'            = return Quit
-      | c `elem` ['0'..'9'] = return (InputNum $ read [c])
+      | c `elem` ['1'..'9'] = return (InputNum $ read [c])
       | c == '\n'           = return Return
       | c == '\DEL'         = return Escape
 

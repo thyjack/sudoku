@@ -173,7 +173,7 @@ initGameWindow w1 w2 = do
     drawString "↑/↓/←/→: move"
 
     moveCursor 3 2
-    drawString "0-9: input number"
+    drawString "1-9: input number"
 
     moveCursor 4 2
     drawString "bs: delete number"
