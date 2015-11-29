@@ -132,6 +132,7 @@ ask w1'' w2'' question options = do
       updateWindow w1 $ do
         uncurry moveCursor $ textAnchor (anchors !! i)
         drawString "■"
+        uncurry moveCursor $ textAnchor (anchors !! i)
       render
 
       let parseIn w1' w2' =
