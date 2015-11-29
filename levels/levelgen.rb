@@ -38,7 +38,7 @@ $levels["2-hard.level"] = <<-EOF
 EOF
 
 $levels["3-test.level"] = <<-EOF
-391286574
+.91286574
 487359126
 652714839
 875431692
@@ -82,5 +82,4 @@ def write(levels=$levels)
   end
 end
 
-require 'pry'
-binding.pry
+write
