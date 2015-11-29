@@ -102,7 +102,7 @@ ask w1'' w2'' question options = do
           drawString $ "[ ] " ++ option
       
       updateWindow w2 $ do
-        drawBox Nothing Nothing
+        clear; drawBox Nothing Nothing
 
         moveCursor 2 2
         drawString "↑: move up"
@@ -124,6 +124,7 @@ ask w1'' w2'' question options = do
 
     cleanWindow w = do
       updateWindow w clear
+      render
 
     askLoop w1 w2 i' = do
       let i = (i' + size) `mod` size 
@@ -195,8 +196,9 @@ renderBoard w board =
   forM_ (range (Position T L, Position B R)) $ \pos1 ->
     forM_ (range (Position T L, Position B R)) $ \pos2 ->
       case board ^. (bgAx pos1) ^. (bgAx pos2) of
-        Left n -> drawNumber (show n) w True pos1 pos2
-        _      -> return ()
+        Left n         -> drawNumber (show n) w True pos1 pos2
+        Right (Just n) -> drawNumber (show n) w False pos1 pos2
+        _              -> return ()
 
 gameWinWindow :: Window
               -> Window

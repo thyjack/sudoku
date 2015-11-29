@@ -62,11 +62,24 @@ gameLoop w1 w2 = do
 
     case input of
       MoveKey k  -> moveFocus k >> gameLoop w1 w2 
-      Quit       -> return ()
+      Quit       -> askQuit w1 w2 b
       InputNum n -> tryInputNum (Just n) >> gameLoop w1 w2
       Escape     -> tryInputNum Nothing >> gameLoop w1 w2 
       _          -> lift beep >> gameLoop w1 w2
   where
+    askQuit w1 w2 b = do
+      ans <- lift $ ask w1 w2 "Do you really wish to quit?" ["Yes", "No"]
+      case ans of
+        Nothing -> resume
+        Just 0  -> return ()
+        Just 1  -> resume
+      where
+        resume = do
+          lift $ initGameWindow w1 w2
+          lift $ renderBoard w1 b
+
+          gameLoop w1 w2
+
     tryInputNum :: Maybe Number -> Game ()
     tryInputNum n = do
       b <- use gBoard
@@ -75,10 +88,13 @@ gameLoop w1 w2 = do
       
       case b ^. (bgAx pos1 . bgAx pos2) of
         Left _  -> lift beep
-        Right _ ->
+        Right _ -> saveNum n pos1 pos2 >>
           if isJust n 
             then lift $ drawNumber (show $ fromJust n) w1 False pos1 pos2 
             else lift $ drawNumber " " w1 False pos1 pos2
+
+    saveNum n pos1 pos2 = 
+      gBoard.(bgAx pos1).(bgAx pos2) .= (Right n)
 
     moveFocusTo (Board b2 pos1) = do
       updateWindow w1 $ do
@@ -114,9 +130,4 @@ gameWin :: Window
         -> Window
         -> Game ()
 gameWin = (lift.) . gameWinWindow
-
-
-
-
-
 
